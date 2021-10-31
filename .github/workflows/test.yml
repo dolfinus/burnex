@@ -19,7 +19,7 @@ jobs:
         with:
           concurrent_skipping: always
           cancel_others: true
-          skip_after_successful_duplicate: true
+          skip_after_successful_duplicate: false
           paths_ignore: '["**/README.md", "**/CHANGELOG.md", "**/LICENSE"]'
           do_not_skip: '["pull_request"]'
 
@@ -70,7 +70,6 @@ jobs:
 
   credo:
     name: Run credo
-    needs: unit-test
     runs-on: ubuntu-latest
 
     steps:
@@ -108,7 +107,6 @@ jobs:
 
   dialyzer:
     name: Run dialyzer
-    needs: unit-test
     runs-on: ubuntu-latest
 
     steps:
@@ -155,3 +153,13 @@ jobs:
 
     - name: Run dialyzer
       run: mix dialyzer
+
+  done:
+    name: All done
+    needs: [unit-test, credo, dialyzer]
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: All done
+      run: echo Done

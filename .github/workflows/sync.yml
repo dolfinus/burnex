@@ -24,7 +24,7 @@ jobs:
       - name: Commit changes
         if: steps.changes.outcome != 'success'
         run: |
-          git checkout main --
+          git checkout master --
           git config user.email "benjamin@opencollective.com"
           git config user.name "Burnex Bot"
           git add priv/burner-email-providers/emails.txt
@@ -42,4 +42,5 @@ jobs:
       - name: Push changes
         if: steps.changes.outcome != 'success'
         run: |
-          git push --follow-tags
+          git push
+          git push --tags

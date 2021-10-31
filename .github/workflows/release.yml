@@ -1,10 +1,9 @@
 name: Releases
 
 on:
-  workflow_dispatch:
-  #push:
-  #  tags:
-  #    - .*
+  push:
+    tags:
+      - .*
 
 jobs:
   release:
@@ -17,7 +16,7 @@ jobs:
         id: wait-for-tests
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: Run dialyzer
+          checkName: All done
           ref: ${{ github.ref }}
           timeoutSeconds: 3600
 
