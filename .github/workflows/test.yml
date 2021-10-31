@@ -2,6 +2,8 @@ name: Test
 
 on:
   push:
+    branches:
+      - '**'
   pull_request:
     branches:
       - master
@@ -17,7 +19,8 @@ jobs:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@master
         with:
-          concurrent_skipping: always
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          concurrent_skipping: same_content_newer
           cancel_others: true
           skip_after_successful_duplicate: false
           paths_ignore: '["**/README.md", "**/CHANGELOG.md", "**/LICENSE"]'
@@ -71,9 +74,7 @@ jobs:
   credo:
     name: Run credo
     runs-on: ubuntu-latest
-
-    needs: check_duplicate_runs
-    if: ${{ needs.check_duplicate_runs.outputs.should_skip != 'true' }}
+    needs: unit-test
 
     steps:
     - name: Checkout
@@ -111,9 +112,7 @@ jobs:
   dialyzer:
     name: Run dialyzer
     runs-on: ubuntu-latest
-
-    needs: check_duplicate_runs
-    if: ${{ needs.check_duplicate_runs.outputs.should_skip != 'true' }}
+    needs: unit-test
 
     steps:
     - name: Checkout
@@ -162,7 +161,7 @@ jobs:
 
   done:
     name: All done
-    needs: [unit-test, credo, dialyzer]
+    needs: [credo, dialyzer]
     runs-on: ubuntu-latest
 
     steps:
